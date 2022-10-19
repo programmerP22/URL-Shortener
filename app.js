@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  
+  res.render('result')
 })
 
 app.listen(3000, () => {
