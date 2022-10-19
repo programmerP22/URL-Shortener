@@ -1,1 +1,15 @@
-<h2>Hello world! 這是 index</h2>
+{{#if shortenedURL}}
+<div class="result">
+  <h3>Success! Please use this link:</h3>
+  <p id="generatedURL">{{origin}}/{{shortURL}}</p>
+</div>
+<button class="copy" onclick="copy()">Copy</button>
+
+{{else}}
+<div class="mt-4">
+  <form action="/" method="POST">
+    <input class="form-control" type="url" name="url" placeholder="input URL here" required style="width: 60vw; background: #DCDCDC; border: white">
+    <button type="submit" class="btn btn-outline-primary mt-3 p-2 fs-6" style="width: 26vw">Shorten</button>
+  </form>
+</div>
+{{/if}}

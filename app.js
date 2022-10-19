@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars');
+const URL = require('./models/URL')
 
 const app = express()
 
@@ -22,6 +23,10 @@ db.once('open', () => {
 
 app.get('/', (req, res) => {
   res.render('index')
+})
+
+app.post('/', (req, res) => {
+  
 })
 
 app.listen(3000, () => {
