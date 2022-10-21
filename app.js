@@ -35,10 +35,12 @@ app.post('/', (req, res) => {
   URL.findOne({ originalURL: longURL })
     .lean()
     .then((url) => { 
+      //如果原網址已輸入過，回傳資料庫中之短網址
       if (url){
         let shortURL = url.shortenedURL
         res.render('result', { shortURL })
       } else {
+      //如果尚未輸入過，建立一個新的短網址並回傳  
         let shortURL = shortURLGenerator()
         URL.create({ originalURL: longURL, shortenedURL: shortURL })
         res.render('result', { shortURL })
