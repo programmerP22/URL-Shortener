@@ -44,11 +44,31 @@ app.post('/', (req, res) => {
       //如果尚未輸入過，建立一個新的短網址並回傳  
         let shortURL = shortURLGenerator()
         URL.create({ originalURL: longURL, shortenedURL: shortURL })
-        res.render('result', { shortURL })
+        res.render('result', { shortURL, baseURL })
       }
     })
     .catch(err => console.log(err))
 })
+
+//使用短網址連向原始網站
+app.get('/:shortURL', (req, res) => {
+  const {shortURL} = req.params
+  URL.findOne({ shortenedURL: shortURL })
+    .lean()
+    .then((url) => {
+      if (url){
+        res.redirect(url.originalURL)
+      } else {
+        res.render("error", {
+          errorURL: baseURL + '/' +shortURL
+        })
+      }
+    })
+    .catch(error => console.log(error))
+})
+
+
+
 
 app.listen(3000, () => {
   console.log('App is running on http://localhost:3000')
