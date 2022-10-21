@@ -32,21 +32,19 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   const { longURL } = req.body
-  let shortURL = shortURLGenerator()
-
-  //輸入相同網址時，產生一樣短網址
-  if (URL.findOne({ originalURL: longURL })) {
-    URL.findOne({ originalURL: longURL })
-      .lean()
-      .then((url) => { 
-        shortURL = url.shortenedURL
+  URL.findOne({ originalURL: longURL })
+    .lean()
+    .then((url) => { 
+      if (url){
+        let shortURL = url.shortenedURL
         res.render('result', { shortURL })
-    })  
-  } else {
-    URL.create({ originalURL: longURL, shortenedURL: shortURL})
-      .then(() => res.render('result', { shortURL }))
-      .catch(err => console.log(err))
-  }
+      } else {
+        let shortURL = shortURLGenerator()
+        URL.create({ originalURL: longURL, shortenedURL: shortURL })
+        res.render('result', { shortURL })
+      }
+    })
+    .catch(err => console.log(err))
 })
 
 app.listen(3000, () => {
