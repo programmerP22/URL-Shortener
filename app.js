@@ -2,13 +2,18 @@ const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars');
 const URL = require('./models/URL')
+const bodyParser = require('body-parser')
+let shortURLGenerator = require('./utilities/shortURLGenerator')
+
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const app = express()
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+app.use(bodyParser.urlencoded({ extended: true }))
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // 取得資料庫連線狀態
 const db = mongoose.connection
@@ -26,7 +31,22 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  res.render('result')
+  const { longURL } = req.body
+  let shortURL = shortURLGenerator()
+
+  //輸入相同網址時，產生一樣短網址
+  if (URL.findOne({ originalURL: longURL })) {
+    URL.findOne({ originalURL: longURL })
+      .lean()
+      .then((url) => { 
+        shortURL = url.shortenedURL
+        res.render('result', { shortURL })
+    })  
+  } else {
+    URL.create({ originalURL: longURL, shortenedURL: shortURL})
+      .then(() => res.render('result', { shortURL }))
+      .catch(err => console.log(err))
+  }
 })
 
 app.listen(3000, () => {
