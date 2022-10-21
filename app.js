@@ -4,6 +4,7 @@ const exphbs = require('express-handlebars');
 const URL = require('./models/URL')
 const bodyParser = require('body-parser')
 let shortURLGenerator = require('./utilities/shortURLGenerator')
+const baseURL = 'http://localhost:3000'
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -38,7 +39,7 @@ app.post('/', (req, res) => {
       //如果原網址已輸入過，回傳資料庫中之短網址
       if (url){
         let shortURL = url.shortenedURL
-        res.render('result', { shortURL })
+        res.render('result', { shortURL, baseURL })
       } else {
       //如果尚未輸入過，建立一個新的短網址並回傳  
         let shortURL = shortURLGenerator()
