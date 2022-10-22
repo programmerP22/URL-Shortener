@@ -7,10 +7,10 @@
 ### 專案畫面
 
 - 首頁
-![Index page about Restaurant List](./public/image/snapshot_index.png)
+![Index page about URL Shortener](./public/image/snapshot_index.png)
 
 - 產生短網址頁面
-![Information page of clicked restaurant](./public/image/snapshot_detail.png)
+![Result page of URL Shortener](./public/image/snapshot_result.png)
 
 
 ### 安裝
