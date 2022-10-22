@@ -10,4 +10,5 @@ const URLSchema = new Schema({
     required: true 
   }
 })
+
 module.exports = mongoose.model('URL', URLSchema)

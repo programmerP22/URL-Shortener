@@ -1,5 +1,3 @@
-//回傳五碼 英數混合字馬  英文可分大小寫 complete
-//資料不可重複
 function shortURLGenerator(){
   const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const lowercaseLetters = uppercaseLetters.toLowerCase()
