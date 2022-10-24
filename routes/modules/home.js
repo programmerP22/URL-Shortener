@@ -21,14 +21,14 @@ router.post('/', (req, res) => {
   }
   //如果有輸入URL，就進入以下程式碼
   const { longURL } = req.body
-  //這邊先在宣告一個新的短網址，之後同時供 create 跟 render使用
+  //這邊先宣告一個新的短網址，之後同時供 create 跟 render使用
   let shortURL = shortURLGenerator()
   URL.findOne({ originalURL: longURL })
     .lean()
     //這邊先確認下面要render result頁面的短網址是哪個
     .then((url) => {
       if (!url) {
-        //如果尚未輸入過，先測試短網址是否已經使用過，如果已經使用過，就再重新建立一組短網址
+        //如果尚未輸入過，先測試剛剛宣告短網址是否已經使用過，如果已經使用過，就再重新建立一組短網址
         URL.findOne({ shortenedURL: shortURL })
         .lean()
         .then((url) => {
@@ -38,14 +38,14 @@ router.post('/', (req, res) => {
             }
           }
         }) 
-        // 用已經宣告好的短網址，在資料庫建立一筆新的資料建立
+        // 用新的短網址，在資料庫建立一筆新的資料
         URL.create({ originalURL: longURL, shortenedURL: shortURL })
       } else {
         //如果原網址已輸入過，回傳資料庫中之短網址
         shortURL = url.shortenedURL
       }
     })
-    //等到確認好要使用短網址 再用一個then() 去 render result頁面，避免URL.create()失敗，但回傳成功的頁面到前端去的情況。
+    //等到確認好要使用的短網址 再用一個then() 去 render result頁面，避免URL.create()失敗，但回傳成功的頁面到前端去的情況。
     .then(() => {
       res.render('result', { shortURL, baseURL })
     })
