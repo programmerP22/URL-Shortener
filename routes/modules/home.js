@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
   }
   //如果有輸入URL，就進入以下程式碼
   const { longURL } = req.body
-  //這邊先在宣告一個新的短網址，同時供 create 跟 render使用
+  //這邊先在宣告一個新的短網址，之後同時供 create 跟 render使用
   let shortURL = shortURLGenerator()
   URL.findOne({ originalURL: longURL })
     .lean()
