@@ -28,17 +28,22 @@ router.post('/', (req, res) => {
     //這邊先確認下面要render result頁面的短網址是哪個
     .then((url) => {
       if (!url) {
-        //如果尚未輸入過，先測試剛剛宣告短網址是否已經使用過，如果已經使用過，就再重新建立一組短網址
+        //如果尚未輸入過，先測試剛剛宣告短網址是否已經使用過，如果已經使用過，就再重新建立一組短網址，並再查詢，重複這個步驟直到沒有重複的
         URL.findOne({ shortenedURL: shortURL })
         .lean()
-        .then((url) => {
-          if (url) {
-            while (shortURL === url.shortenedURL){
+        .then((shortFindURL) => {
+          if (shortFindURL){
+            while (shortURL === shortFindURL.shortenedURL) {
               shortURL = shortURLGenerator()
+              URL.findOne({ shortenedURL: shortURL })
+                .lean()
+                .then((reFindURL) => {
+                  shortFindURL = reFindURL
+                })
             }
           }
         }) 
-        //等到確認好要使用的短網址 再用一個then()，在資料庫建立一筆新的資料
+        //等到確認好要使用的短網址 再用一個then()，在資料庫建立一筆新的資料，避免非同步的問題
         .then(() => {
           URL.create({ originalURL: longURL, shortenedURL: shortURL })
         })
