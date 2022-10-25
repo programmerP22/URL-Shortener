@@ -38,10 +38,12 @@ router.post('/', (req, res) => {
             }
           }
         }) 
-        // 用新的短網址，在資料庫建立一筆新的資料
-        URL.create({ originalURL: longURL, shortenedURL: shortURL })
+        //等到確認好要使用的短網址 再用一個then()，在資料庫建立一筆新的資料
+        .then(() => {
+          URL.create({ originalURL: longURL, shortenedURL: shortURL })
+        })
+      //如果原網址已輸入過，回傳資料庫中之短網址
       } else {
-        //如果原網址已輸入過，回傳資料庫中之短網址
         shortURL = url.shortenedURL
       }
     })
